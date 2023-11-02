@@ -2,7 +2,12 @@
 
 
 
-1. Run the cadence server via docker-compose up
+1. Run the cadence server
+
+```
+LOG_LEVEL=debug docker build . -t ubercadence/server:taylan-test --build-arg TARGET=auto-setup
+docker-compose up -f /Users/taylan/code/docker-compose.yml
+```
 
 2. Create samples-domain
 
