@@ -169,6 +169,25 @@ var (
 			"IndexedField2": &apiv1.Payload{Data: []byte{232, 0}},
 		},
 	}
+
+	ActiveClusterSelectionPolicyRegionSticky = &apiv1.ActiveClusterSelectionPolicy{
+		Strategy: apiv1.ActiveClusterSelectionStrategy_ACTIVE_CLUSTER_SELECTION_STRATEGY_REGION_STICKY,
+		StrategyConfig: &apiv1.ActiveClusterSelectionPolicy_ActiveClusterStickyRegionConfig{
+			ActiveClusterStickyRegionConfig: &apiv1.ActiveClusterStickyRegionConfig{
+				StickyRegion: "us-east-1",
+			},
+		},
+	}
+	ActiveClusterSelectionPolicyExternalEntity = &apiv1.ActiveClusterSelectionPolicy{
+		Strategy: apiv1.ActiveClusterSelectionStrategy_ACTIVE_CLUSTER_SELECTION_STRATEGY_EXTERNAL_ENTITY,
+		StrategyConfig: &apiv1.ActiveClusterSelectionPolicy_ActiveClusterExternalEntityConfig{
+			ActiveClusterExternalEntityConfig: &apiv1.ActiveClusterExternalEntityConfig{
+				ExternalEntityType: "external-entity-type",
+				ExternalEntityKey:  "external-entity-key",
+			},
+		},
+	}
+
 	PayloadMap = map[string]*apiv1.Payload{
 		"Payload1": &Payload1,
 		"Payload2": &Payload2,

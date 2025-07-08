@@ -490,6 +490,11 @@ type (
 		// Note: JitterStart remains used when determining the actual start time of executions.
 		// Optional: defaulted to CronOverlapPolicySkip
 		CronOverlapPolicy s.CronOverlapPolicy
+
+		// ActiveClusterSelectionPolicy - Policy for selecting the active cluster to start the workflow execution on for active-active domains.
+		// Note: This doesn't apply to local or active-passive domains.
+		// Optional: defaulted to region sticky strategy with receiver cluster as the active cluster.
+		ActiveClusterSelectionPolicy *ActiveClusterSelectionPolicy
 	}
 
 	// RetryPolicy defines the retry policy.
@@ -563,6 +568,29 @@ type (
 
 	// ParentClosePolicy defines the action on children when parent is closed
 	ParentClosePolicy int
+
+	// ActiveClusterSelectionPolicy defines the policy for selecting the active cluster to start the workflow execution on for active-active domains.
+	// Active-active domains can be configured to be active in multiple clusters (at most one in a given region).
+	// Individual workflows can be configured to be active in one of the active clusters of the domain.
+	//
+	// There are two supported strategies:
+	// - Region sticky: The workflow will be active in the active cluster of the region that start workflow request is sent to.
+	// - External entity: The workflow can be associated with an external entity which has a corresponding region.
+	// 	 The workflow will be considered active in the active cluster of the region that the external entity is in.
+	//   Cadence server must be aware of the external entity type used. Custom types can be registered following the documentation in
+	//   https://github.com/cadence-workflow/cadence/blob/master/docs/design/active-active/active-active.md
+	ActiveClusterSelectionPolicy struct {
+		Strategy           ActiveClusterSelectionStrategy
+		ExternalEntityType string
+		ExternalEntityKey  string
+	}
+
+	ActiveClusterSelectionStrategy int
+)
+
+const (
+	ActiveClusterSelectionStrategyRegionSticky ActiveClusterSelectionStrategy = iota
+	ActiveClusterSelectionStrategyExternalEntity
 )
 
 const (

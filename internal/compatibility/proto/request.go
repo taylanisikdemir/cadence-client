@@ -422,6 +422,8 @@ func SignalWithStartWorkflowExecutionRequest(t *shared.SignalWithStartWorkflowEx
 			DelayStart:                   secondsToDuration(t.DelayStartSeconds),
 			JitterStart:                  secondsToDuration(t.JitterStartSeconds),
 			FirstRunAt:                   unixNanoToTime(t.FirstRunAtTimestamp),
+			CronOverlapPolicy:            CronOverlapPolicy(t.CronOverlapPolicy),
+			ActiveClusterSelectionPolicy: ActiveClusterSelectionPolicy(t.ActiveClusterSelectionPolicy),
 		},
 		SignalName:  t.GetSignalName(),
 		SignalInput: Payload(t.SignalInput),
@@ -477,6 +479,8 @@ func StartWorkflowExecutionRequest(t *shared.StartWorkflowExecutionRequest) *api
 		DelayStart:                   secondsToDuration(t.DelayStartSeconds),
 		JitterStart:                  secondsToDuration(t.JitterStartSeconds),
 		FirstRunAt:                   unixNanoToTime(t.FirstRunAtTimestamp),
+		CronOverlapPolicy:            CronOverlapPolicy(t.CronOverlapPolicy),
+		ActiveClusterSelectionPolicy: ActiveClusterSelectionPolicy(t.ActiveClusterSelectionPolicy),
 	}
 }
 
@@ -679,4 +683,37 @@ func DeleteDomainRequest(r *shared.DeleteDomainRequest) *apiv1.DeleteDomainReque
 		Name:          r.GetName(),
 		SecurityToken: r.GetSecurityToken(),
 	}
+}
+
+func ActiveClusterSelectionPolicy(t *shared.ActiveClusterSelectionPolicy) *apiv1.ActiveClusterSelectionPolicy {
+	if t == nil {
+		return nil
+	}
+	plc := &apiv1.ActiveClusterSelectionPolicy{
+		Strategy: ActiveClusterSelectionStrategy(t.Strategy),
+	}
+
+	if plc.Strategy == apiv1.ActiveClusterSelectionStrategy_ACTIVE_CLUSTER_SELECTION_STRATEGY_INVALID {
+		return nil
+	}
+
+	switch *t.Strategy {
+	case shared.ActiveClusterSelectionStrategyRegionSticky:
+		plc.StrategyConfig = &apiv1.ActiveClusterSelectionPolicy_ActiveClusterStickyRegionConfig{
+			ActiveClusterStickyRegionConfig: &apiv1.ActiveClusterStickyRegionConfig{
+				StickyRegion: *t.StickyRegion,
+			},
+		}
+	case shared.ActiveClusterSelectionStrategyExternalEntity:
+		plc.StrategyConfig = &apiv1.ActiveClusterSelectionPolicy_ActiveClusterExternalEntityConfig{
+			ActiveClusterExternalEntityConfig: &apiv1.ActiveClusterExternalEntityConfig{
+				ExternalEntityType: *t.ExternalEntityType,
+				ExternalEntityKey:  *t.ExternalEntityKey,
+			},
+		}
+	default:
+		return nil
+	}
+
+	return plc
 }

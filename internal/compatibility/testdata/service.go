@@ -334,6 +334,44 @@ var (
 		SearchAttributes:             &SearchAttributes,
 		Header:                       &Header,
 	}
+	StartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy1 = apiv1.StartWorkflowExecutionRequest{
+		Domain:                       DomainName,
+		WorkflowId:                   WorkflowID,
+		WorkflowType:                 &WorkflowType,
+		TaskList:                     &TaskList,
+		Input:                        &Payload1,
+		ExecutionStartToCloseTimeout: Duration1,
+		TaskStartToCloseTimeout:      Duration2,
+		Identity:                     Identity,
+		RequestId:                    RequestID,
+		WorkflowIdReusePolicy:        WorkflowIDReusePolicy,
+		RetryPolicy:                  &RetryPolicy,
+		CronSchedule:                 CronSchedule,
+		Memo:                         &Memo,
+		SearchAttributes:             &SearchAttributes,
+		Header:                       &Header,
+		CronOverlapPolicy:            apiv1.CronOverlapPolicy_CRON_OVERLAP_POLICY_SKIPPED,
+		ActiveClusterSelectionPolicy: ActiveClusterSelectionPolicyRegionSticky,
+	}
+	StartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy2 = apiv1.StartWorkflowExecutionRequest{
+		Domain:                       DomainName,
+		WorkflowId:                   WorkflowID,
+		WorkflowType:                 &WorkflowType,
+		TaskList:                     &TaskList,
+		Input:                        &Payload1,
+		ExecutionStartToCloseTimeout: Duration1,
+		TaskStartToCloseTimeout:      Duration2,
+		Identity:                     Identity,
+		RequestId:                    RequestID,
+		WorkflowIdReusePolicy:        WorkflowIDReusePolicy,
+		RetryPolicy:                  &RetryPolicy,
+		CronSchedule:                 CronSchedule,
+		Memo:                         &Memo,
+		SearchAttributes:             &SearchAttributes,
+		Header:                       &Header,
+		CronOverlapPolicy:            apiv1.CronOverlapPolicy_CRON_OVERLAP_POLICY_BUFFER_ONE,
+		ActiveClusterSelectionPolicy: ActiveClusterSelectionPolicyExternalEntity,
+	}
 	StartWorkflowExecutionResponse = apiv1.StartWorkflowExecutionResponse{
 		RunId: RunID,
 	}
@@ -348,6 +386,18 @@ var (
 	}
 	SignalWithStartWorkflowExecutionRequest = apiv1.SignalWithStartWorkflowExecutionRequest{
 		StartRequest: &StartWorkflowExecutionRequest,
+		SignalName:   SignalName,
+		SignalInput:  &Payload2,
+		Control:      Control,
+	}
+	SignalWithStartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy1 = apiv1.SignalWithStartWorkflowExecutionRequest{
+		StartRequest: &StartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy1,
+		SignalName:   SignalName,
+		SignalInput:  &Payload2,
+		Control:      Control,
+	}
+	SignalWithStartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy2 = apiv1.SignalWithStartWorkflowExecutionRequest{
+		StartRequest: &StartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy2,
 		SignalName:   SignalName,
 		SignalInput:  &Payload2,
 		Control:      Control,
