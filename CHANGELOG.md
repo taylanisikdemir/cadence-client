@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Added ActiveClusterSelectionPolicy to workflow start options (#TODO: add this before merge)
+- Added ActiveClusterSelectionPolicy to workflow start options (#1438)
 
 ## [v1.3.0] - 2025-07-08
 ### Added
