@@ -138,6 +138,13 @@ func TestConvertActiveClusterSelectionPolicy(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "invalid strategy",
+			policy: &ActiveClusterSelectionPolicy{
+				Strategy: ActiveClusterSelectionStrategy(-1),
+			},
+			wantErr: true,
+		},
 	}
 
 	for _, test := range tests {
