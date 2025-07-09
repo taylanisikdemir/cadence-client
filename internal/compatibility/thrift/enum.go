@@ -394,3 +394,16 @@ func CronOverlapPolicy(t apiv1.CronOverlapPolicy) *shared.CronOverlapPolicy {
 	// we treat any unknown value as invalid
 	return nil
 }
+
+func ActiveClusterSelectionStrategy(t apiv1.ActiveClusterSelectionStrategy) *shared.ActiveClusterSelectionStrategy {
+	switch t {
+	case apiv1.ActiveClusterSelectionStrategy_ACTIVE_CLUSTER_SELECTION_STRATEGY_INVALID:
+		return nil
+	case apiv1.ActiveClusterSelectionStrategy_ACTIVE_CLUSTER_SELECTION_STRATEGY_REGION_STICKY:
+		return shared.ActiveClusterSelectionStrategyRegionSticky.Ptr()
+	case apiv1.ActiveClusterSelectionStrategy_ACTIVE_CLUSTER_SELECTION_STRATEGY_EXTERNAL_ENTITY:
+		return shared.ActiveClusterSelectionStrategyExternalEntity.Ptr()
+	}
+	// we treat any unknown value as invalid
+	return nil
+}

@@ -22,6 +22,7 @@ package thrift
 
 import (
 	"go.uber.org/cadence/.gen/go/shared"
+	"go.uber.org/cadence/internal/common"
 
 	apiv1 "github.com/uber/cadence-idl/go/proto/api/v1"
 )
@@ -432,6 +433,8 @@ func SignalWithStartWorkflowExecutionRequest(t *apiv1.SignalWithStartWorkflowExe
 		request.Memo = Memo(t.StartRequest.Memo)
 		request.SearchAttributes = SearchAttributes(t.StartRequest.SearchAttributes)
 		request.Header = Header(t.StartRequest.Header)
+		request.CronOverlapPolicy = CronOverlapPolicy(t.StartRequest.CronOverlapPolicy)
+		request.ActiveClusterSelectionPolicy = ActiveClusterSelectionPolicy(t.StartRequest.ActiveClusterSelectionPolicy)
 	}
 
 	return request
@@ -475,6 +478,8 @@ func StartWorkflowExecutionRequest(t *apiv1.StartWorkflowExecutionRequest) *shar
 		DelayStartSeconds:                   durationToSeconds(t.DelayStart),
 		JitterStartSeconds:                  durationToSeconds(t.JitterStart),
 		FirstRunAtTimestamp:                 timeToUnixNano(t.FirstRunAt),
+		CronOverlapPolicy:                   CronOverlapPolicy(t.CronOverlapPolicy),
+		ActiveClusterSelectionPolicy:        ActiveClusterSelectionPolicy(t.ActiveClusterSelectionPolicy),
 	}
 }
 
@@ -591,4 +596,27 @@ func ListOpenWorkflowExecutionsRequest(r *apiv1.ListOpenWorkflowExecutionsReques
 		ExecutionFilter: WorkflowExecutionFilter(r.GetExecutionFilter()),
 		TypeFilter:      WorkflowTypeFilter(r.GetTypeFilter()),
 	}
+}
+
+func ActiveClusterSelectionPolicy(t *apiv1.ActiveClusterSelectionPolicy) *shared.ActiveClusterSelectionPolicy {
+	if t == nil {
+		return nil
+	}
+	plc := &shared.ActiveClusterSelectionPolicy{
+		Strategy: ActiveClusterSelectionStrategy(t.Strategy),
+	}
+
+	if plc.Strategy == nil {
+		return nil
+	}
+
+	switch *plc.Strategy {
+	case shared.ActiveClusterSelectionStrategyRegionSticky:
+		plc.StickyRegion = common.StringPtr(t.GetActiveClusterStickyRegionConfig().GetStickyRegion())
+	case shared.ActiveClusterSelectionStrategyExternalEntity:
+		plc.ExternalEntityType = common.StringPtr(t.GetActiveClusterExternalEntityConfig().GetExternalEntityType())
+		plc.ExternalEntityKey = common.StringPtr(t.GetActiveClusterExternalEntityConfig().GetExternalEntityKey())
+	}
+
+	return plc
 }

@@ -1059,6 +1059,11 @@ func (wc *workflowClient) getWorkflowStartRequest(
 		return nil, errors.New("Invalid FirstRunAt option")
 	}
 
+	activeClusterSelectionPolicy, err := convertActiveClusterSelectionPolicy(options.ActiveClusterSelectionPolicy)
+	if err != nil {
+		return nil, err
+	}
+
 	// create a workflow start span and attach it to the context object.
 	// N.B. we need to finish this immediately as jaeger does not give us a way
 	// to recreate a span given a span context - which means we will run into
@@ -1093,6 +1098,7 @@ func (wc *workflowClient) getWorkflowStartRequest(
 		JitterStartSeconds:                  common.Int32Ptr(jitterStartSeconds),
 		FirstRunAtTimestamp:                 common.Int64Ptr(firstRunAtTimestamp),
 		CronOverlapPolicy:                   common.CronOverlapPolicyPtr(options.CronOverlapPolicy),
+		ActiveClusterSelectionPolicy:        activeClusterSelectionPolicy,
 	}
 
 	return startRequest, nil
@@ -1167,6 +1173,11 @@ func (wc *workflowClient) getSignalWithStartRequest(
 		return nil, errors.New("Invalid FirstRunAt option")
 	}
 
+	activeClusterSelectionPolicy, err := convertActiveClusterSelectionPolicy(options.ActiveClusterSelectionPolicy)
+	if err != nil {
+		return nil, err
+	}
+
 	// create a workflow start span and attach it to the context object. finish it immediately
 	ctx, span := createOpenTracingWorkflowSpan(ctx, wc.tracer, time.Now(), fmt.Sprintf("%s-%s", tracePrefix, workflowType.Name), workflowID)
 	span.Finish()
@@ -1196,6 +1207,7 @@ func (wc *workflowClient) getSignalWithStartRequest(
 		JitterStartSeconds:                  common.Int32Ptr(jitterStartSeconds),
 		FirstRunAtTimestamp:                 common.Int64Ptr(firstRunAtTimestamp),
 		CronOverlapPolicy:                   common.CronOverlapPolicyPtr(options.CronOverlapPolicy),
+		ActiveClusterSelectionPolicy:        activeClusterSelectionPolicy,
 	}
 
 	return signalWithStartRequest, nil

@@ -21,6 +21,7 @@
 package compatibility
 
 import (
+	"fmt"
 	"testing"
 
 	gogo "github.com/gogo/protobuf/types"
@@ -533,8 +534,17 @@ func TestSignalExternalWorkflowExecutionInitiatedEventAttributes(t *testing.T) {
 	}
 }
 func TestSignalWithStartWorkflowExecutionRequest(t *testing.T) {
-	for _, item := range []*apiv1.SignalWithStartWorkflowExecutionRequest{nil, {StartRequest: &apiv1.StartWorkflowExecutionRequest{}}, &testdata.SignalWithStartWorkflowExecutionRequest} {
-		assert.Equal(t, item, proto.SignalWithStartWorkflowExecutionRequest(thrift.SignalWithStartWorkflowExecutionRequest(item)))
+	tests := []*apiv1.SignalWithStartWorkflowExecutionRequest{
+		nil,
+		{StartRequest: &apiv1.StartWorkflowExecutionRequest{}},
+		&testdata.SignalWithStartWorkflowExecutionRequest,
+		&testdata.SignalWithStartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy1,
+		&testdata.SignalWithStartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy2,
+	}
+	for i, item := range tests {
+		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
+			assert.Equal(t, item, proto.SignalWithStartWorkflowExecutionRequest(thrift.SignalWithStartWorkflowExecutionRequest(item)))
+		})
 	}
 }
 func TestSignalWithStartWorkflowExecutionResponse(t *testing.T) {
@@ -563,8 +573,17 @@ func TestStartTimeFilter(t *testing.T) {
 	}
 }
 func TestStartWorkflowExecutionRequest(t *testing.T) {
-	for _, item := range []*apiv1.StartWorkflowExecutionRequest{nil, {}, &testdata.StartWorkflowExecutionRequest} {
-		assert.Equal(t, item, proto.StartWorkflowExecutionRequest(thrift.StartWorkflowExecutionRequest(item)))
+	tests := []*apiv1.StartWorkflowExecutionRequest{
+		nil,
+		{},
+		&testdata.StartWorkflowExecutionRequest,
+		&testdata.StartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy1,
+		&testdata.StartWorkflowExecutionRequestWithCronAndActiveClusterSelectionPolicy2,
+	}
+	for i, item := range tests {
+		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
+			assert.Equal(t, item, proto.StartWorkflowExecutionRequest(thrift.StartWorkflowExecutionRequest(item)))
+		})
 	}
 }
 func TestStartWorkflowExecutionResponse(t *testing.T) {
